@@ -1,0 +1,63 @@
+
+{% extends 'employees/base.html' %}
+
+{% block title %}Department Details{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <h1>{{ department.name }}</h1>
+
+    <a href="{% url 'department_list' %}"
+       class="btn btn-secondary">
+        Back
+    </a>
+</div>
+
+<div class="panel">
+
+    <h2>Department Information</h2>
+
+    <p><strong>Name:</strong> {{ department.name }}</p>
+
+    <p>
+        <strong>Description:</strong>
+        {{ department.description|default:"No description" }}
+    </p>
+
+    <h2>Employees in this Department</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Designation</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td>
+                    <a href="{% url 'employee_detail' employee.pk %}">
+                        {{ employee.name }}
+                    </a>
+                </td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.designation }}</td>
+                <td>{{ employee.status }}</td>
+            </tr>
+
+            {% empty %}
+            <tr>
+                <td colspan="4">No employees in this department.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

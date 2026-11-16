@@ -1,0 +1,78 @@
+
+{% extends 'employees/base.html' %}
+
+{% block title %}Employee Details{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <h1>Employee Details</h1>
+
+    <a href="{% url 'employee_list' %}" class="btn btn-secondary">
+        Back
+    </a>
+</div>
+
+<div class="detail-card">
+
+    <h2>{{ employee.name }}</h2>
+
+    <div class="detail-grid">
+
+        <div>
+            <label>Employee ID</label>
+            <p>{{ employee.id }}</p>
+        </div>
+
+        <div>
+            <label>Email</label>
+            <p>{{ employee.email }}</p>
+        </div>
+
+        <div>
+            <label>Phone</label>
+            <p>{{ employee.phone }}</p>
+        </div>
+
+        <div>
+            <label>Department</label>
+            <p>{{ employee.department|default:"Not Assigned" }}</p>
+        </div>
+
+        <div>
+            <label>Designation</label>
+            <p>{{ employee.designation }}</p>
+        </div>
+
+        <div>
+            <label>Salary</label>
+            <p>₹{{ employee.salary }}</p>
+        </div>
+
+        <div>
+            <label>Status</label>
+            <p>{{ employee.status }}</p>
+        </div>
+
+        <div>
+            <label>Joining Date</label>
+            <p>{{ employee.joining_date }}</p>
+        </div>
+
+    </div>
+
+    <div class="form-actions">
+        <a href="{% url 'employee_edit' employee.pk %}"
+           class="btn btn-warning">
+            Edit Employee
+        </a>
+
+        <a href="{% url 'employee_delete' employee.pk %}"
+           class="btn btn-danger">
+            Delete Employee
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,99 @@
+
+{% extends 'employees/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>Dashboard</h1>
+        <p>Welcome to Employee Management System</p>
+    </div>
+
+    <a href="{% url 'employee_add' %}" class="btn btn-primary">
+        + Add Employee
+    </a>
+</div>
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <h3>Total Employees</h3>
+        <h1>{{ total_employees }}</h1>
+    </div>
+
+    <div class="stat-card">
+        <h3>Active Employees</h3>
+        <h1>{{ active_employees }}</h1>
+    </div>
+
+    <div class="stat-card">
+        <h3>Inactive Employees</h3>
+        <h1>{{ inactive_employees }}</h1>
+    </div>
+
+    <div class="stat-card">
+        <h3>Departments</h3>
+        <h1>{{ total_departments }}</h1>
+    </div>
+
+</div>
+
+<div class="panel">
+    <h2>Employees by Department</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Department</th>
+                <th>Total Employees</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for department in department_counts %}
+            <tr>
+                <td>{{ department.name }}</td>
+                <td>{{ department.total }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">No departments found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="panel">
+    <h2>Recently Joined Employees</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Joining Date</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for employee in recent_employees %}
+            <tr>
+                <td>{{ employee.name }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.department|default:"Not Assigned" }}</td>
+                <td>{{ employee.joining_date }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No employees found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

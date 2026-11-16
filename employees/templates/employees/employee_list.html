@@ -1,0 +1,174 @@
+
+{% extends 'employees/base.html' %}
+
+{% block title %}Employees{% endblock %}
+
+{% block content %}
+
+<div class="page-heading">
+    <div>
+        <h1>Employees</h1>
+        <p>Manage all company employees</p>
+    </div>
+
+    <a href="{% url 'employee_add' %}" class="btn btn-primary">
+        + Add Employee
+    </a>
+</div>
+
+<div class="panel">
+
+    <form method="GET" class="filter-form">
+
+        <input type="text"
+               name="search"
+               placeholder="Search name, email or ID"
+               value="{{ search }}">
+
+        <select name="department">
+            <option value="">All Departments</option>
+
+            {% for dept in departments %}
+            <option value="{{ dept.id }}"
+                {% if selected_department == dept.id|stringformat:"s" %}
+                    selected
+                {% endif %}>
+                {{ dept.name }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <select name="status">
+            <option value="">All Status</option>
+            <option value="Active"
+                {% if selected_status == 'Active' %}selected{% endif %}>
+                Active
+            </option>
+            <option value="Inactive"
+                {% if selected_status == 'Inactive' %}selected{% endif %}>
+                Inactive
+            </option>
+        </select>
+
+        <select name="sort">
+            <option value="name">Name A-Z</option>
+            <option value="-name"
+                {% if selected_sort == '-name' %}selected{% endif %}>
+                Name Z-A
+            </option>
+            <option value="salary"
+                {% if selected_sort == 'salary' %}selected{% endif %}>
+                Salary Low-High
+            </option>
+            <option value="-salary"
+                {% if selected_sort == '-salary' %}selected{% endif %}>
+                Salary High-Low
+            </option>
+            <option value="-joining_date"
+                {% if selected_sort == '-joining_date' %}selected{% endif %}>
+                Newest Joining
+            </option>
+            <option value="joining_date"
+                {% if selected_sort == 'joining_date' %}selected{% endif %}>
+                Oldest Joining
+            </option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Search</button>
+
+        <a href="{% url 'employee_list' %}" class="btn btn-secondary">
+            Reset
+        </a>
+
+    </form>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Department</th>
+                    <th>Designation</th>
+                    <th>Salary</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.id }}</td>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.phone }}</td>
+                    <td>{{ employee.department|default:"Not Assigned" }}</td>
+                    <td>{{ employee.designation }}</td>
+                    <td>₹{{ employee.salary }}</td>
+
+                    <td>
+                        <span class="status {{ employee.status|lower }}">
+                            {{ employee.status }}
+                        </span>
+                    </td>
+
+                    <td class="actions">
+                        <a href="{% url 'employee_detail' employee.pk %}"
+                           class="btn btn-info">View</a>
+
+                        <a href="{% url 'employee_edit' employee.pk %}"
+                           class="btn btn-warning">Edit</a>
+
+                        <a href="{% url 'employee_delete' employee.pk %}"
+                           class="btn btn-danger">Delete</a>
+
+                        <form method="POST"
+                              action="{% url 'employee_toggle_status' employee.pk %}"
+                              class="inline-form">
+                            {% csrf_token %}
+
+                            <button type="submit"
+                                    class="btn btn-secondary">
+                                {% if employee.status == 'Active' %}
+                                    Deactivate
+                                {% else %}
+                                    Activate
+                                {% endif %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                {% empty %}
+                <tr>
+                    <td colspan="9">No employees found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+
+        {% if page_obj.has_previous %}
+            <a href="?search={{ search|urlencode }}&department={{ selected_department }}&status={{ selected_status }}&sort={{ selected_sort }}&page=1">First</a>
+            <a href="?search={{ search|urlencode }}&department={{ selected_department }}&status={{ selected_status }}&sort={{ selected_sort }}&page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?search={{ search|urlencode }}&department={{ selected_department }}&status={{ selected_status }}&sort={{ selected_sort }}&page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?search={{ search|urlencode }}&department={{ selected_department }}&status={{ selected_status }}&sort={{ selected_sort }}&page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

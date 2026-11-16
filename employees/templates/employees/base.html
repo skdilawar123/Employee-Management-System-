@@ -1,0 +1,66 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Employee Management{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{% static 'employees/css/style.css' %}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <span>EMS</span>
+            <h2>Employee System</h2>
+        </div>
+
+        <nav>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'employee_list' %}">Employees</a>
+            <a href="{% url 'employee_add' %}">Add Employee</a>
+            <a href="{% url 'department_list' %}">Departments</a>
+            <a href="{% url 'department_add' %}">Add Department</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <p>Logged in as</p>
+            <strong>{{ request.user.username }}</strong>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <h3>Employee Management System</h3>
+            <span>{{ request.user.username }}</span>
+        </header>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <section class="page-content">
+            {% block content %}
+            {% endblock %}
+        </section>
+
+    </main>
+
+</div>
+
+<script src="{% static 'employees/js/script.js' %}"></script>
+
+</body>
+</html>
